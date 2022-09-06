@@ -1,7 +1,8 @@
 {
 	"name": "mongoose-trash",
 	"version": "0.0.1",
-	"main": "index.js",
+	"main": "/index.js",
+	"types": "/index.d.ts",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/mdalaminbey/mongoose-trash"
@@ -17,5 +18,8 @@
 		"nest",
 		"nest.nest"
 	],
-	"license": "ISC"
+	"license": "MIT",
+	"dependencies": {
+		"mongoose": "^6.5.3"
+	}
 }
