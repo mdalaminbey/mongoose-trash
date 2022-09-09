@@ -1,12 +1,13 @@
 {
 	"name": "mongoose-trash",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"types": "/index.d.ts",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/mdalaminbey/mongoose-trash"
 	},
 	"keywords": [
+		"softdelete",
 		"mongodb",
 		"mongoose",
 		"mongoose.js",
@@ -15,7 +16,7 @@
 		"express.js",
 		"fastify.js",
 		"nest",
-		"nest.nest"
+		"nest.js"
 	],
 	"license": "MIT",
 	"dependencies": {
