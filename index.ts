@@ -1,71 +1,64 @@
-import {
-  CallbackWithoutResultAndOptionalError,
-  HydratedDocument,
-  Schema,
-  Query,
-} from "mongoose";
+import { HydratedDocument, Schema, Query } from "mongoose";
 
 export const MongooseTrash = (schema: Schema) => {
-  schema.add({ deleted: Boolean });
-  schema.add({ deletedAt: Date });
+  schema.add({ trashed: Boolean });
+  schema.add({ trashedAt: Date });
   schema.pre("save", function (next) {
-    if (!this.deleted) {
-      this.deleted = false;
+    if (!this.trashed) {
+      this.trashed = false;
     }
 
-    if (!this.deletedAt) {
-      this.deletedAt = null;
+    if (!this.trashedAt) {
+      this.trashedAt = null;
     }
     next();
   });
 
-  schema.methods.softDeleteOne = function (callback: any) {
-    this.deleted = true;
-    this.deletedAt = new Date();
+  schema.methods.trashOne = function (callback: any) {
+    this.trashed = true;
+    this.trashedAt = new Date();
     this.save(callback);
     return this;
   };
 
   schema.methods.restore = function (callback: any) {
-    this.deleted = false;
-    this.deletedAt = null;
+    this.trashed = false;
+    this.trashedAt = null;
     this.save(callback);
   };
 
   const queryHelpers = {
-    isDeleted(cond: any): any {
-      if (typeof cond === "undefined") {
-        cond = true;
+    findTrashed(trashed: boolean): any {
+      if (typeof trashed === "undefined") {
+        trashed = true;
       }
       // @ts-ignore
-      return this.find({
-        deleted: cond,
-      });
+      return this.find({ trashed });
     },
-    softDeleteMany(): any {
+    trashMany(): any {
       // @ts-ignore
-      return this.updateMany({ deleted: true, deletedAt: new Date() });
+      return this.updateMany({ trashed: true, trashedAt: new Date() });
     },
     restoreMany(): any {
       // @ts-ignore
-      return this.where("withDeleted", true).updateMany({
-        deleted: false,
-        deletedAt: null,
+      return this.where("withTrashed", true).updateMany({
+        trashed: false,
+        trashedAt: null,
       });
     },
-    withDeleted(): any {
+    withTrashed(): any {
       // @ts-ignore
-      return this.where("withDeleted", true);
+      return this.where("withTrashed", true);
     },
-    onlyDeleted(): any {
+    onlyTrashed(): any {
       // @ts-ignore
-      return this.where("onlyDeleted", true);
+      return this.where("onlyTrashed", true);
     },
   };
 
   schema.query = { ...schema.query, ...queryHelpers };
 
-  const typesFindQueryMiddleware = [
+  const findQueryMiddleware = [
     "count",
     "find",
     "findOne",
@@ -76,24 +69,23 @@ export const MongooseTrash = (schema: Schema) => {
     "updateOne",
     "updateMany",
   ];
-  const excludeInFindQueriesIsDeleted = async function (
-    this: any,
-    next: CallbackWithoutResultAndOptionalError
+  const Middleware = async function (
+    this: any
   ) {
-    if (this._conditions.withDeleted) {
-      delete this._conditions.withDeleted;
-      next();
-    } else if (this._conditions.onlyDeleted) {
-      delete this._conditions.onlyDeleted;
-      this.where({ deleted: true });
-      next();
+    if (this._conditions.withTrashed) {
+        delete this._conditions.withTrashed;
+        return;
+    } else if (this._conditions.onlyTrashed) {
+      delete this._conditions.onlyTrashed;
+      this.where({ trashed: true });
+      return;
     }
-    this.where({ deleted: false });
-    next();
+    this.where({ trashed: false });
+    return;
   };
 
-  typesFindQueryMiddleware.forEach((type: any) => {
-    schema.pre(type, excludeInFindQueriesIsDeleted);
+  findQueryMiddleware.forEach((type: any) => {
+    schema.pre(type, Middleware);
   });
 };
 
@@ -105,15 +97,16 @@ export type ModelQuery<P> = Query<
   MongooseTrashQueryHelpers<P>;
 
 export interface MongooseTrashQueryHelpers<P> {
-  softDeleteMany(this: ModelQuery<P>): ModelQuery<P>;
+  trashMany(this: ModelQuery<P>): ModelQuery<P>;
   restoreMany(this: ModelQuery<P>): ModelQuery<P>;
-  withDeleted(this: ModelQuery<P>): ModelQuery<P>;
-  onlyDeleted(this: ModelQuery<P>): ModelQuery<P>;
+  withTrashed(this: ModelQuery<P>): ModelQuery<P>;
+  onlyTrashed(this: ModelQuery<P>): ModelQuery<P>;
+  findTrashed(this: ModelQuery<P>): ModelQuery<P>;
 }
 
 export interface MongooseTrashDocument {
-  deleted: Boolean;
-  deletedAt: Date;
-  softDeleteOne: () => void;
+  trashed: Boolean;
+  trashedAt: Date;
+  trashOne: () => void;
   restore: () => void;
 }

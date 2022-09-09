@@ -11,60 +11,58 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongooseTrash = void 0;
 const MongooseTrash = (schema) => {
-    schema.add({ deleted: Boolean });
-    schema.add({ deletedAt: Date });
+    schema.add({ trashed: Boolean });
+    schema.add({ trashedAt: Date });
     schema.pre("save", function (next) {
-        if (!this.deleted) {
-            this.deleted = false;
+        if (!this.trashed) {
+            this.trashed = false;
         }
-        if (!this.deletedAt) {
-            this.deletedAt = null;
+        if (!this.trashedAt) {
+            this.trashedAt = null;
         }
         next();
     });
-    schema.methods.softDeleteOne = function (callback) {
-        this.deleted = true;
-        this.deletedAt = new Date();
+    schema.methods.trashOne = function (callback) {
+        this.trashed = true;
+        this.trashedAt = new Date();
         this.save(callback);
         return this;
     };
     schema.methods.restore = function (callback) {
-        this.deleted = false;
-        this.deletedAt = null;
+        this.trashed = false;
+        this.trashedAt = null;
         this.save(callback);
     };
     const queryHelpers = {
-        isDeleted(cond) {
-            if (typeof cond === "undefined") {
-                cond = true;
+        findTrashed(trashed) {
+            if (typeof trashed === "undefined") {
+                trashed = true;
             }
             // @ts-ignore
-            return this.find({
-                deleted: cond,
-            });
+            return this.find({ trashed });
         },
-        softDeleteMany() {
+        trashMany() {
             // @ts-ignore
-            return this.updateMany({ deleted: true, deletedAt: new Date() });
+            return this.updateMany({ trashed: true, trashedAt: new Date() });
         },
         restoreMany() {
             // @ts-ignore
-            return this.where("withDeleted", true).updateMany({
-                deleted: false,
-                deletedAt: null,
+            return this.where("withTrashed", true).updateMany({
+                trashed: false,
+                trashedAt: null,
             });
         },
-        withDeleted() {
+        withTrashed() {
             // @ts-ignore
-            return this.where("withDeleted", true);
+            return this.where("withTrashed", true);
         },
-        onlyDeleted() {
+        onlyTrashed() {
             // @ts-ignore
-            return this.where("onlyDeleted", true);
+            return this.where("onlyTrashed", true);
         },
     };
     schema.query = Object.assign(Object.assign({}, schema.query), queryHelpers);
-    const typesFindQueryMiddleware = [
+    const findQueryMiddleware = [
         "count",
         "find",
         "findOne",
@@ -75,23 +73,23 @@ const MongooseTrash = (schema) => {
         "updateOne",
         "updateMany",
     ];
-    const excludeInFindQueriesIsDeleted = function (next) {
+    const Middleware = function () {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this._conditions.withDeleted) {
-                delete this._conditions.withDeleted;
-                next();
+            if (this._conditions.withTrashed) {
+                delete this._conditions.withTrashed;
+                return;
             }
-            else if (this._conditions.onlyDeleted) {
-                delete this._conditions.onlyDeleted;
-                this.where({ deleted: true });
-                next();
+            else if (this._conditions.onlyTrashed) {
+                delete this._conditions.onlyTrashed;
+                this.where({ trashed: true });
+                return;
             }
-            this.where({ deleted: false });
-            next();
+            this.where({ trashed: false });
+            return;
         });
     };
-    typesFindQueryMiddleware.forEach((type) => {
-        schema.pre(type, excludeInFindQueriesIsDeleted);
+    findQueryMiddleware.forEach((type) => {
+        schema.pre(type, Middleware);
     });
 };
 exports.MongooseTrash = MongooseTrash;
