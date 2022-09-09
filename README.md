@@ -1,4 +1,4 @@
-# Mongoose Trash For Softdelete/Trash For MongoDB
+# Mongoose Trash For MongooseJS
 <p align="center">
   <a href="https://npmcharts.com/compare/mongoose-trash?minimal=true"><img src="https://img.shields.io/npm/dm/mongoose-trash.svg?sanitize=true" alt="Downloads"></a>
   <a href="https://www.npmjs.com/package/mongoose-trash"><img src="https://img.shields.io/npm/v/mongoose-trash.svg?sanitize=true" alt="Version"></a>
@@ -101,3 +101,23 @@ npm i mongoose-trash
       return trashUser;
     }
     ```
+
+# Trash And Restore A Single Document
+
+  ```typescript
+    const user = await User.where('name', 'Bill').withTrashed().findOne();
+
+    user?.trash(); // trash single document
+
+    user?.restore(); // restore single document
+  ```
+
+
+## Query Helpers
+
+| Method                | Example                                              |
+| ------------------------ | ---------------------------------------------------- |
+| `trashMany()` | ``` User.find({ _id: { $in: ['631b08391a4e2f00c19368d4'], }, }).trashMany() ``` |
+| `restoreMany()` | `User.where('name', 'Md Al Amin').restoreMany()`       |
+| `withTrashed()` | `User.find({ "gmail": { $regex: '.*email.*' } }).withTrashed()` |
+| `onlyTrashed()` | `User.find({ "gmail": { $regex: '.*email.*' } }).onlyTrashed();` |

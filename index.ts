@@ -14,7 +14,7 @@ export const MongooseTrash = (schema: Schema) => {
     next();
   });
 
-  schema.methods.trashOne = function (callback: any) {
+  schema.methods.trash = function (callback: any) {
     this.trashed = true;
     this.trashedAt = new Date();
     this.save(callback);
@@ -28,13 +28,6 @@ export const MongooseTrash = (schema: Schema) => {
   };
 
   const queryHelpers = {
-    findTrashed(trashed: boolean): any {
-      if (typeof trashed === "undefined") {
-        trashed = true;
-      }
-      // @ts-ignore
-      return this.find({ trashed });
-    },
     trashMany(): any {
       // @ts-ignore
       return this.updateMany({ trashed: true, trashedAt: new Date() });
@@ -101,12 +94,11 @@ export interface MongooseTrashQueryHelpers<P> {
   restoreMany(this: ModelQuery<P>): ModelQuery<P>;
   withTrashed(this: ModelQuery<P>): ModelQuery<P>;
   onlyTrashed(this: ModelQuery<P>): ModelQuery<P>;
-  findTrashed(this: ModelQuery<P>): ModelQuery<P>;
 }
 
 export interface MongooseTrashDocument {
   trashed: Boolean;
   trashedAt: Date;
-  trashOne: () => void;
+  trash: () => void;
   restore: () => void;
 }

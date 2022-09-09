@@ -6,11 +6,10 @@ export interface MongooseTrashQueryHelpers<P> {
     restoreMany(this: ModelQuery<P>): ModelQuery<P>;
     withTrashed(this: ModelQuery<P>): ModelQuery<P>;
     onlyTrashed(this: ModelQuery<P>): ModelQuery<P>;
-    findTrashed(this: ModelQuery<P>): ModelQuery<P>;
 }
 export interface MongooseTrashDocument {
     trashed: Boolean;
     trashedAt: Date;
-    trashOne: () => void;
+    trash: () => void;
     restore: () => void;
 }

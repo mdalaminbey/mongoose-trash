@@ -22,7 +22,7 @@ const MongooseTrash = (schema) => {
         }
         next();
     });
-    schema.methods.trashOne = function (callback) {
+    schema.methods.trash = function (callback) {
         this.trashed = true;
         this.trashedAt = new Date();
         this.save(callback);
@@ -34,13 +34,6 @@ const MongooseTrash = (schema) => {
         this.save(callback);
     };
     const queryHelpers = {
-        findTrashed(trashed) {
-            if (typeof trashed === "undefined") {
-                trashed = true;
-            }
-            // @ts-ignore
-            return this.find({ trashed });
-        },
         trashMany() {
             // @ts-ignore
             return this.updateMany({ trashed: true, trashedAt: new Date() });
