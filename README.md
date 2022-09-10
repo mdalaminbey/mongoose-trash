@@ -1,15 +1,18 @@
 # Mongoose Trash For MongooseJS
-<p align="center">
-  <a href="https://npmcharts.com/compare/mongoose-trash?minimal=true"><img src="https://img.shields.io/npm/dm/mongoose-trash.svg?sanitize=true" alt="Downloads"></a>
-  <a href="https://www.npmjs.com/package/mongoose-trash"><img src="https://img.shields.io/npm/v/mongoose-trash.svg?sanitize=true" alt="Version"></a>
-  <a href="https://www.npmjs.com/package/mongoose-trash"><img src="https://img.shields.io/npm/l/mongoose-trash.svg?sanitize=true" alt="License"></a>
-</p>
 
-```sh
+
+[![npm](https://img.shields.io/npm/v/mongoose-trash.svg)](https://www.npmjs.com/package/mongoose-trash) [![License](https://img.shields.io/npm/l/mongoose-trash.svg)](https://www.npmjs.com/package/mongoose-trash) [![downloads](http://img.shields.io/npm/dm/mongoose-trash.svg?style=flat-square)](https://www.npmjs.com/package/mongoose-trash)
+
+
+## mongoose-trash
+
+This package helps to retrieve MongoDB documents from Trash. The package is tested on express.js, fastify.js and nest.js
+
+```shell
 npm i mongoose-trash
 ```
 
-## TypeScript Integration
+### TypeScript Integration
 1. Create an interface representing a document in MongoDB With Mongoose Trash Document.
 
     ```typescript
@@ -51,7 +54,7 @@ npm i mongoose-trash
     ```
 
 
-## NestJS Integration
+### NestJS Integration
 
 1. `user.schema.ts` File
     ```typescript 
@@ -102,7 +105,7 @@ npm i mongoose-trash
     }
     ```
 
-# Trash And Restore A Single Document
+## Trash And Restore A Single Document
 
   ```typescript
     const user = await User.where('name', 'Bill').withTrashed().findOne();
