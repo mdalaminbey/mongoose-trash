@@ -1,12 +1,10 @@
 # Mongoose Trash For MongooseJS
 
-
-[![npm](https://img.shields.io/npm/v/mongoose-trash.svg)](https://www.npmjs.com/package/mongoose-trash) [![License](https://img.shields.io/npm/l/mongoose-trash.svg)](https://www.npmjs.com/package/mongoose-trash) [![downloads](http://img.shields.io/npm/dm/mongoose-trash.svg?style=flat-square)](https://www.npmjs.com/package/mongoose-trash)
-
-
 ## mongoose-trash
 
 This package helps to retrieve MongoDB documents from Trash. The package is tested on express.js, fastify.js and nest.js
+
+[![npm](https://img.shields.io/npm/v/mongoose-trash.svg)](https://www.npmjs.com/package/mongoose-trash) [![downloads](http://img.shields.io/npm/dm/mongoose-trash.svg?style=flat-square)](https://www.npmjs.com/package/mongoose-trash) [![License](https://img.shields.io/npm/l/mongoose-trash.svg)](https://www.npmjs.com/package/mongoose-trash)
 
 ```shell
 npm i mongoose-trash
